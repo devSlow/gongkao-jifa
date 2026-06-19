@@ -1,10 +1,10 @@
 {
   "id": "conv-1781849449766-bfn6hihn3",
   "providerId": "claude",
-  "title": "你好啊啊啊啊",
-  "titleGenerationStatus": "pending",
+  "title": "你好问候",
+  "titleGenerationStatus": "success",
   "createdAt": 1781849449767,
-  "updatedAt": 1781849513418,
+  "updatedAt": 1781849537515,
   "lastResponseAt": 1781849513418,
   "sessionId": "a0348872-2332-4777-8982-9db40b394860",
   "providerState": {
