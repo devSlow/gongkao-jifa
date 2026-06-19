@@ -1,0 +1,1949 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>安徽省考行测 · 三年对比分析 (2024-2026)</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+<style>
+  :root {
+    --bg: #0f172a;
+    --surface: #1e293b;
+    --surface2: #334155;
+    --accent: #38bdf8;
+    --accent2: #818cf8;
+    --accent3: #34d399;
+    --accent4: #fb923c;
+    --accent5: #f472b6;
+    --accent6: #a78bfa;
+    --text: #e2e8f0;
+    --text2: #94a3b8;
+    --border: #475569;
+    --danger: #ef4444;
+    --success: #22c55e;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+  .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+
+  .header {
+    text-align: center;
+    padding: 40px 20px 30px;
+    background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 30px;
+  }
+  .header h1 {
+    font-size: 2em;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 8px;
+  }
+  .header .subtitle { color: var(--text2); font-size: 1.05em; }
+
+  .stats-bar {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 16px;
+    margin-bottom: 30px;
+  }
+  .stat-card {
+    background: var(--surface);
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+    border: 1px solid var(--border);
+    transition: transform 0.2s;
+  }
+  .stat-card:hover { transform: translateY(-2px); }
+  .stat-card .num { font-size: 2em; font-weight: 700; line-height: 1.2; }
+  .stat-card .label { color: var(--text2); font-size: 0.9em; margin-top: 4px; }
+  .c1 { color: var(--accent); }
+  .c2 { color: var(--accent2); }
+  .c3 { color: var(--accent3); }
+  .c4 { color: var(--accent4); }
+
+  .nav-tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 24px;
+    overflow-x: auto;
+    padding-bottom: 4px;
+    flex-wrap: wrap;
+  }
+  .nav-tab {
+    padding: 10px 20px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    cursor: pointer;
+    color: var(--text2);
+    font-size: 0.95em;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+  .nav-tab:hover { border-color: var(--accent); color: var(--text); }
+  .nav-tab.active {
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    color: #fff;
+    border-color: transparent;
+    font-weight: 600;
+  }
+
+  .section { display: none; animation: fadeIn 0.3s ease; }
+  .section.active { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+  .card {
+    background: var(--surface);
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 20px;
+    border: 1px solid var(--border);
+  }
+  .card h2 { font-size: 1.3em; margin-bottom: 16px; }
+  .card h3 { font-size: 1.1em; margin: 16px 0 10px; color: var(--accent); }
+
+  .chart-container {
+    position: relative;
+    width: 100%;
+    max-height: 420px;
+    margin: 10px 0;
+  }
+
+  .data-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 12px 0;
+    font-size: 0.95em;
+  }
+  .data-table th, .data-table td {
+    padding: 10px 14px;
+    text-align: center;
+    border-bottom: 1px solid var(--border);
+  }
+  .data-table th {
+    background: var(--surface2);
+    color: var(--accent);
+    font-weight: 600;
+    position: sticky;
+    top: 0;
+  }
+  .data-table tr:hover { background: rgba(56, 189, 248, 0.05); }
+  .data-table td:first-child { text-align: left; font-weight: 500; }
+
+  .tag {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 0.8em;
+    font-weight: 600;
+  }
+  .tag-hot { background: rgba(239,68,68,0.2); color: #f87171; }
+  .tag-warm { background: rgba(251,146,60,0.2); color: #fb923c; }
+  .tag-cool { background: rgba(56,189,248,0.2); color: #38bdf8; }
+  .tag-new { background: rgba(129,140,248,0.2); color: #a78bfa; }
+  .tag-critical { background: rgba(239,68,68,0.3); color: #fca5a5; border: 1px solid rgba(239,68,68,0.4); }
+
+  .progress-row { display: flex; align-items: center; gap: 12px; margin: 8px 0; }
+  .progress-label { min-width: 90px; font-size: 0.9em; color: var(--text2); text-align: right; }
+  .progress-bar {
+    flex: 1; height: 28px; background: var(--surface2);
+    border-radius: 14px; overflow: hidden; position: relative;
+  }
+  .progress-fill {
+    height: 100%; border-radius: 14px; display: flex;
+    align-items: center; justify-content: flex-end;
+    padding-right: 10px; font-size: 0.8em; font-weight: 600;
+    color: #fff; transition: width 1s ease;
+  }
+  .progress-target {
+    position: absolute; top: 0; height: 100%;
+    border-left: 2px dashed rgba(255,255,255,0.6);
+    display: flex; align-items: center;
+  }
+  .progress-target span {
+    position: absolute; top: -18px; left: -12px;
+    font-size: 0.7em; color: var(--accent3); white-space: nowrap;
+  }
+
+  .info-box {
+    padding: 16px 20px; border-radius: 10px;
+    margin: 12px 0; border-left: 4px solid;
+  }
+  .info-box.tip { background: rgba(52,211,153,0.1); border-color: var(--accent3); }
+  .info-box.warn { background: rgba(251,146,60,0.1); border-color: var(--accent4); }
+  .info-box.important { background: rgba(239,68,68,0.1); border-color: var(--danger); }
+  .info-box strong { color: var(--accent); }
+
+  .timeline { position: relative; padding-left: 30px; margin: 20px 0; }
+  .timeline::before {
+    content: ''; position: absolute; left: 8px; top: 0; bottom: 0;
+    width: 2px; background: linear-gradient(to bottom, var(--accent), var(--accent2), var(--accent3));
+  }
+  .timeline-item {
+    position: relative; margin-bottom: 24px; padding: 16px 20px;
+    background: var(--surface2); border-radius: 10px;
+  }
+  .timeline-item::before {
+    content: ''; position: absolute; left: -26px; top: 20px;
+    width: 12px; height: 12px; border-radius: 50%;
+    background: var(--accent); border: 2px solid var(--bg);
+  }
+  .timeline-item .period { font-weight: 700; color: var(--accent); margin-bottom: 6px; }
+  .timeline-item ul { padding-left: 18px; color: var(--text2); }
+  .timeline-item li { margin: 4px 0; }
+
+  .comparison-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 12px; margin: 16px 0;
+  }
+  .comparison-cell {
+    background: var(--surface2); border-radius: 8px;
+    padding: 14px; text-align: center;
+  }
+  .comparison-cell .year { color: var(--accent); font-weight: 700; font-size: 1.1em; }
+  .comparison-cell .detail { color: var(--text2); font-size: 0.85em; margin-top: 6px; }
+
+  .heatmap-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 10px; margin: 12px 0;
+  }
+  .heat-cell {
+    padding: 12px; border-radius: 8px; text-align: center;
+    font-size: 0.9em; transition: transform 0.2s;
+  }
+  .heat-cell:hover { transform: scale(1.03); }
+  .heat-3 { background: rgba(239,68,68,0.25); border: 1px solid rgba(239,68,68,0.4); }
+  .heat-2 { background: rgba(251,146,60,0.2); border: 1px solid rgba(251,146,60,0.3); }
+  .heat-1 { background: rgba(56,189,248,0.15); border: 1px solid rgba(56,189,248,0.25); }
+  .heat-0 { background: var(--surface2); border: 1px solid var(--border); }
+
+  .module-header { display: flex; align-items: center; gap: 16px; margin-bottom: 20px; }
+  .module-icon {
+    width: 56px; height: 56px; border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.4em; font-weight: 700; color: var(--accent);
+  }
+  .module-title { font-size: 1.3em; font-weight: 700; }
+  .module-desc { color: var(--text2); font-size: 0.9em; }
+
+  .score-compare {
+    display: flex; align-items: center; gap: 20px;
+    justify-content: center; margin: 20px 0;
+  }
+  .score-circle {
+    width: 100px; height: 100px; border-radius: 50%;
+    display: flex; flex-direction: column; align-items: center;
+    justify-content: center; border: 3px solid;
+  }
+  .score-circle .score-num { font-size: 1.8em; font-weight: 700; }
+  .score-circle .score-label { font-size: 0.75em; }
+  .score-arrow { font-size: 2em; color: var(--accent3); }
+
+  /* Diagnosis-specific styles */
+  .diag-card {
+    background: var(--surface);
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 20px;
+    border: 1px solid var(--border);
+    border-left: 4px solid;
+  }
+  .diag-critical { border-left-color: var(--danger); }
+  .diag-warning { border-left-color: var(--accent4); }
+  .diag-info { border-left-color: var(--accent); }
+  .diag-good { border-left-color: var(--accent3); }
+
+  .diag-header {
+    display: flex; justify-content: space-between;
+    align-items: center; margin-bottom: 12px;
+  }
+  .diag-title { font-size: 1.2em; font-weight: 700; }
+  .diag-score {
+    font-size: 1.4em; font-weight: 700; padding: 4px 16px;
+    border-radius: 8px; background: var(--surface2);
+  }
+
+  .diag-section { margin: 12px 0; }
+  .diag-section-title {
+    font-size: 0.85em; font-weight: 600; color: var(--text2);
+    text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px;
+  }
+  .diag-list { padding-left: 18px; color: var(--text2); }
+  .diag-list li { margin: 6px 0; }
+  .diag-list li strong { color: var(--text); }
+
+  .action-box {
+    background: var(--surface2); border-radius: 8px;
+    padding: 14px 18px; margin: 8px 0;
+  }
+  .action-box .action-title {
+    font-weight: 700; color: var(--accent3); margin-bottom: 6px;
+  }
+  .action-box ol { padding-left: 20px; color: var(--text2); }
+  .action-box ol li { margin: 4px 0; }
+
+  .vs-bar {
+    display: flex; align-items: center; gap: 12px;
+    margin: 8px 0; font-size: 0.9em;
+  }
+  .vs-bar .vs-label { min-width: 60px; text-align: right; color: var(--text2); }
+  .vs-bar .vs-track {
+    flex: 1; height: 20px; background: var(--surface2);
+    border-radius: 10px; overflow: hidden; position: relative;
+  }
+  .vs-bar .vs-fill {
+    height: 100%; border-radius: 10px;
+    display: flex; align-items: center; justify-content: flex-end;
+    padding-right: 8px; font-size: 0.75em; font-weight: 600; color: #fff;
+  }
+  .vs-bar .vs-val { min-width: 50px; font-weight: 600; }
+
+  /* Basics section styles */
+  .concept-card {
+    background: var(--surface);
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 24px;
+    border: 1px solid var(--border);
+  }
+  .concept-card h2 {
+    font-size: 1.3em;
+    margin-bottom: 4px;
+  }
+  .concept-card h3 {
+    font-size: 1.05em;
+    margin: 16px 0 10px;
+    color: var(--accent);
+  }
+  .concept-subtitle {
+    color: var(--text2);
+    font-size: 0.9em;
+    margin-bottom: 16px;
+  }
+  .core-idea {
+    background: linear-gradient(135deg, rgba(56,189,248,0.12), rgba(129,140,248,0.12));
+    border: 1px solid rgba(56,189,248,0.3);
+    border-radius: 10px;
+    padding: 20px;
+    margin: 16px 0;
+    text-align: center;
+  }
+  .core-idea .label {
+    font-size: 0.8em;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 8px;
+  }
+  .core-idea .formula {
+    font-size: 1.4em;
+    font-weight: 700;
+    color: var(--text);
+    margin: 8px 0;
+  }
+  .core-idea .plain {
+    color: var(--text2);
+    font-size: 0.95em;
+  }
+
+  .think-step {
+    display: flex;
+    gap: 14px;
+    margin: 10px 0;
+    align-items: flex-start;
+  }
+  .think-num {
+    min-width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--accent);
+    color: #0f172a;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.85em;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .think-content {
+    flex: 1;
+    color: var(--text2);
+    line-height: 1.7;
+  }
+  .think-content strong { color: var(--text); }
+
+  .variation {
+    background: var(--surface2);
+    border-radius: 8px;
+    padding: 14px 18px;
+    margin: 10px 0;
+    border-left: 3px solid var(--accent6);
+  }
+  .variation .var-title {
+    font-weight: 600;
+    color: var(--accent6);
+    margin-bottom: 6px;
+    font-size: 0.95em;
+  }
+  .variation .var-body {
+    color: var(--text2);
+    font-size: 0.9em;
+  }
+
+  .pitfall {
+    background: rgba(239,68,68,0.08);
+    border: 1px solid rgba(239,68,68,0.2);
+    border-radius: 8px;
+    padding: 14px 18px;
+    margin: 10px 0;
+  }
+  .pitfall .pit-title {
+    font-weight: 600;
+    color: #f87171;
+    margin-bottom: 6px;
+    font-size: 0.95em;
+  }
+  .pitfall .pit-body {
+    color: var(--text2);
+    font-size: 0.9em;
+  }
+
+  .example-box {
+    background: var(--surface2);
+    border-radius: 8px;
+    padding: 16px 18px;
+    margin: 12px 0;
+  }
+  .example-box .ex-title {
+    font-weight: 700;
+    color: var(--accent3);
+    margin-bottom: 10px;
+    font-size: 1em;
+  }
+  .example-box .ex-q {
+    color: var(--text);
+    margin-bottom: 12px;
+    padding: 10px 14px;
+    background: rgba(0,0,0,0.2);
+    border-radius: 6px;
+    font-size: 0.95em;
+    line-height: 1.7;
+  }
+
+  .answer-reveal {
+    margin-top: 10px;
+  }
+  .answer-btn {
+    display: inline-block;
+    padding: 8px 20px;
+    background: var(--accent);
+    color: #0f172a;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.9em;
+    transition: all 0.2s;
+  }
+  .answer-btn:hover { background: #7dd3fc; }
+  .answer-body {
+    display: none;
+    margin-top: 12px;
+    padding: 14px;
+    background: rgba(52,211,153,0.08);
+    border-radius: 8px;
+    border: 1px solid rgba(52,211,153,0.2);
+  }
+  .answer-body.show { display: block; }
+
+  .section-divider {
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--border), transparent);
+    margin: 30px 0;
+  }
+
+  @media (max-width: 600px) {
+    .container { padding: 12px; }
+    .header h1 { font-size: 1.4em; }
+    .stats-bar { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+    .stat-card { padding: 14px; }
+    .stat-card .num { font-size: 1.5em; }
+    .comparison-grid { grid-template-columns: 1fr; }
+    .heatmap-grid { grid-template-columns: repeat(2, 1fr); }
+    .nav-tab { padding: 8px 14px; font-size: 0.85em; }
+    .diag-header { flex-direction: column; align-items: flex-start; gap: 8px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>安徽省考行测 · 三年对比分析</h1>
+  <div class="subtitle">2024 ~ 2026 真题结构 / 考点频率 / 个人诊断 / 目标140+</div>
+</div>
+
+<div class="container">
+
+  <div class="stats-bar">
+    <div class="stat-card"><div class="num c1">3</div><div class="label">分析年份</div></div>
+    <div class="stat-card"><div class="num c2">125</div><div class="label">每年题量</div></div>
+    <div class="stat-card"><div class="num c3">6</div><div class="label">考试模块</div></div>
+    <div class="stat-card"><div class="num c4">140+</div><div class="label">目标总分</div></div>
+  </div>
+
+  <div class="nav-tabs">
+    <div class="nav-tab active" onclick="showSection('diagnosis')">个人诊断</div>
+    <div class="nav-tab" onclick="showSection('overview')">总览</div>
+    <div class="nav-tab" onclick="showSection('structure')">题型结构</div>
+    <div class="nav-tab" onclick="showSection('points')">考点频率</div>
+    <div class="nav-tab" onclick="showSection('basics')">基础思想</div>
+    <div class="nav-tab" onclick="showSection('modules')">模块详解</div>
+    <div class="nav-tab" onclick="showSection('plan')">针对性方案</div>
+  </div>
+
+  <!-- ===== Section: Diagnosis ===== -->
+  <div class="section active" id="sec-diagnosis">
+    <div class="card">
+      <h2>考两次了，到底差在哪</h2>
+      <p style="color:var(--text2);margin-bottom:16px">
+        两次考试成绩：行测 47 -> 56，申论约50。残疾人专岗进面线140+，竞争对手大部分也在60多但同样上不了岸。
+        你目前总分106，需要再提34分。目标：<strong style="color:var(--text)">行测70 + 申论70 = 140</strong>，这是分数线要求，不是"超过谁"的问题。
+      </p>
+      <div class="chart-container" style="max-height:320px">
+        <canvas id="chartDiagCompare"></canvas>
+      </div>
+    </div>
+
+    <!-- 申论诊断 -->
+    <div class="diag-card diag-critical">
+      <div class="diag-header">
+        <div class="diag-title">申论 -- 最大失分点</div>
+        <div class="diag-score" style="color:var(--danger)">50分 -> 目标70分</div>
+      </div>
+      <div class="diag-section">
+        <div class="diag-section-title">现状</div>
+        <ul class="diag-list">
+          <li>看了飞扬等老师的网课，<strong>但自己动笔写得很少</strong></li>
+          <li>申论是主观题，光看课等于没学。就像看别人游泳不下水，永远学不会</li>
+          <li>竞争对手申论70分，你50分，<strong style="color:var(--danger)">20分差距直接决定能不能进面</strong></li>
+        </ul>
+      </div>
+      <div class="diag-section">
+        <div class="diag-section-title">你的核心问题</div>
+        <ul class="diag-list">
+          <li><strong>归纳概括</strong>：要点找不全、表述不精练，答案写得像在"叙述"而不是"概括"</li>
+          <li><strong>综合分析</strong>：逻辑框架不清楚，分析没有层次感</li>
+          <li><strong>公文写作</strong>：格式可能知道，但内容组织能力不够</li>
+          <li><strong>大作文</strong>：立意可能偏、论证空洞、缺少论据储备</li>
+        </ul>
+      </div>
+      <div class="action-box">
+        <div class="action-title">怎么从50冲到70</div>
+        <ol>
+          <li>每周写2套申论真题（严格限时），写完对照参考答案逐句比对</li>
+          <li>前两周只练"归纳概括"和"提出对策"，这两种题型最容易拿分</li>
+          <li>积累规范表述：把参考答案里的"标准表述"抄到一个本子上，反复看</li>
+          <li>大作文先练审题立意（只写提纲），8月再开始写全文</li>
+          <li>找人批改或用AI批改（把答案发给我，我帮你看），自己看不出自己的问题</li>
+          <li>申论70分不是靠天赋，是靠"写够量"。目标：考前写完至少15套完整真题</li>
+        </ol>
+      </div>
+    </div>
+
+    <!-- 数量关系诊断 -->
+    <div class="diag-card diag-warning">
+      <div class="diag-header">
+        <div class="diag-title">数量关系 -- 看了课但不会做题</div>
+        <div class="diag-score" style="color:var(--accent4)">~4题/15题</div>
+      </div>
+      <div class="diag-section">
+        <div class="diag-section-title">现状</div>
+        <ul class="diag-list">
+          <li>看了好几个老师的课（花生十三、齐麟等），但<strong>题目做得很少</strong></li>
+          <li>课上听懂了，课后不会做，这是"被动学习"的典型症状</li>
+          <li>排列组合、概率等你之前说"根本不会"</li>
+        </ul>
+      </div>
+      <div class="diag-section">
+        <div class="diag-section-title">为什么会这样</div>
+        <ul class="diag-list">
+          <li>数量关系的本质是<strong>数学应用题</strong>，光看解题过程不行，必须自己算</li>
+          <li>换老师没用，每个老师讲的方法大同小异，缺的是你自己的练习量</li>
+          <li>考场上需要的是"条件反射"级别的熟练度，不是"理解"</li>
+        </ul>
+      </div>
+      <div class="action-box">
+        <div class="action-title">具体怎么练</div>
+        <ol>
+          <li><strong>不要再换老师了</strong>，就用一个老师的讲义（推荐花生十三）</li>
+          <li>每天10题数量关系，必须动笔算，不能只看答案</li>
+          <li>先只攻克4个高频题型：方程/不定方程、数字特性、工程问题、利润问题</li>
+          <li>做错的题隔3天重做一遍，直到能独立算对</li>
+          <li>排列组合只学最基础的两类（分类加法、分步乘法），考场遇到复杂的直接猜</li>
+        </ol>
+      </div>
+    </div>
+
+    <!-- 资料分析诊断 -->
+    <div class="diag-card diag-warning">
+      <div class="diag-header">
+        <div class="diag-title">资料分析 -- 公式知道但算得慢</div>
+        <div class="diag-score" style="color:var(--accent4)">~10题/20题</div>
+      </div>
+      <div class="diag-section">
+        <div class="diag-section-title">现状</div>
+        <ul class="diag-list">
+          <li>2025/2026年资料分析增加到20题，分值占比上升</li>
+          <li>基本公式可能知道，但<strong>速算不过关</strong>，算一道题花太久</li>
+          <li>综合分析判断题（5题）最容易丢分，因为需要逐项验证</li>
+        </ul>
+      </div>
+      <div class="action-box">
+        <div class="action-title">具体怎么练</div>
+        <ol>
+          <li>先花3天专门练"截位直除"和"特征数字法"，这是资料分析的灵魂</li>
+          <li>每天做1组（5题），限时8分钟。超时说明速算不行</li>
+          <li>综合分析题先看选项再回材料找数据，不要从头算到尾</li>
+          <li>目标：8月底前正确率到85%（17题/20题）</li>
+        </ol>
+      </div>
+    </div>
+
+    <!-- 政治理论诊断 -->
+    <div class="diag-card diag-info">
+      <div class="diag-header">
+        <div class="diag-title">政治理论 -- 看了马克，但方向有偏差</div>
+        <div class="diag-score" style="color:var(--accent)">~7题/15题</div>
+      </div>
+      <div class="diag-section">
+        <div class="diag-section-title">现状</div>
+        <ul class="diag-list">
+          <li>看了马克的公基常识课，但马克的课侧重<strong>公共基础知识</strong>，和行测政治理论的考点不完全对口</li>
+          <li>政治理论考的是"标准表述"，需要准确记忆原文原话，马克的课覆盖面不够精准</li>
+          <li>2025年才独立成模块，马克的课可能没有针对这个新变化更新</li>
+        </ul>
+      </div>
+      <div class="action-box">
+        <div class="action-title">具体怎么练</div>
+        <ol>
+          <li>换用粉笔或华图的<strong>政治理论专项讲义</strong>（针对行测政治理论模块编写）</li>
+          <li>重点背：习近平新时代思想的核心表述、二十大报告、新质生产力等热词的"原文原话"</li>
+          <li>每天早上花20分钟背诵，晚上花10分钟回顾</li>
+          <li>政治理论是"背了就有分"的模块，15题争取对11-12题</li>
+        </ol>
+      </div>
+    </div>
+
+    <!-- 言语+判断 诊断 -->
+    <div class="diag-card diag-good">
+      <div class="diag-header">
+        <div class="diag-title">言语理解 + 判断推理 -- 有基础，但正确率不够稳</div>
+        <div class="diag-score" style="color:var(--accent3)">言语 ~17/25 &nbsp; 判断 ~24/35</div>
+      </div>
+      <div class="diag-section">
+        <div class="diag-section-title">现状</div>
+        <ul class="diag-list">
+          <li>这两个模块你看了课、有一定基础，但没有做到"稳定正确率"</li>
+          <li>言语理解的逻辑填空靠语感而不是方法，波动大</li>
+          <li>判断推理的定义判断和类比推理是送分题，你没有做到90%正确率</li>
+        </ul>
+      </div>
+      <div class="action-box">
+        <div class="action-title">具体怎么练</div>
+        <ol>
+          <li>言语：每天20题逻辑填空，做完把错题的成语/实词辨析抄到本子上</li>
+          <li>判断：定义判断和类比推理单独刷，目标正确率90%</li>
+          <li>图形推理和逻辑判断跟花生十三的方法论，不要靠感觉</li>
+          <li>这两个模块不需要看新课，就是刷题+总结错题</li>
+        </ol>
+      </div>
+    </div>
+
+    <!-- 常识诊断 -->
+    <div class="diag-card diag-good">
+      <div class="diag-header">
+        <div class="diag-title">常识判断 -- 没看过课，但不用专门补</div>
+        <div class="diag-score" style="color:var(--accent3)">~7题/15题</div>
+      </div>
+      <div class="diag-section">
+        <ul class="diag-list">
+          <li>常识判断覆盖面极广（法律、科技、历史、地理），专门复习的投入产出比很低</li>
+          <li>没看课也不用补了，考前看一遍粉笔的常识预测就够</li>
+          <li>你的精力应该放在其他5个模块上</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- 目标校准 -->
+    <div class="card">
+      <h2>先校准目标：行测80分不现实，但上岸完全可行</h2>
+      <div class="chart-container" style="max-height:280px">
+        <canvas id="chartTarget"></canvas>
+      </div>
+      <div class="info-box important">
+        <strong>行测80分意味着什么：</strong>125题只能错15-20题。你目前大概错了55题。4个月内从错55题减到错15题，坦率说，我没有见过这样的案例。行测72-75分在安徽已经是顶尖水平。<br><br>
+        <strong>但你的目标不是"考80分"，你的目标是"考140上岸"。</strong>行测70+申论70+=140，两个科目都得冲70+，因为竞争对手60多也上不了岸，140是硬门槛。
+      </div>
+      <div style="margin-top:16px">
+        <table class="data-table">
+          <thead><tr><th>策略</th><th>行测</th><th>申论</th><th>总分</th><th>可行性</th></tr></thead>
+          <tbody>
+            <tr style="background:rgba(239,68,68,0.08)"><td>你现在的状态</td><td>56</td><td>50</td><td>106</td><td><span class="tag tag-hot">差34分</span></td></tr>
+            <tr style="background:rgba(251,146,60,0.08)"><td>竞争对手水平</td><td>60多</td><td>60多</td><td>~130</td><td><span class="tag tag-warm">也不够</span></td></tr>
+            <tr style="background:rgba(52,211,153,0.08)"><td><strong>你的目标</strong></td><td><strong>70+</strong>（提14分）</td><td><strong>70+</strong>（提20分）</td><td><strong>140+</strong></td><td><span class="tag tag-cool">达标</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p style="color:var(--text2);margin-top:12px">
+        行测从56到70+，提14分，需要3-4个月高强度刷题，这是可以做到的。<br>
+        申论从50到70+，提20分，方法就是大量动笔写+对参考答案+积累规范表述。你看过飞扬的课有基础，缺的是练。<br>
+        <strong style="color:var(--accent3)">行测70 + 申论70 = 140</strong>，两个科目都要冲，没有哪科可以放弃。竞争对手60多也不够，说明这不是"比谁高"的问题，是硬门槛。
+      </p>
+    </div>
+
+    <!-- 错题方法 -->
+    <div class="card">
+      <h2>错题怎么处理：不要抄题，要抄"方法"</h2>
+      <div class="diag-card diag-critical" style="margin-bottom:16px">
+        <div class="diag-title" style="color:var(--danger)">不要做的事：把纸质书的错题打字打出来一题题搜解析</div>
+        <ul class="diag-list" style="margin-top:8px">
+          <li>抄一道题+搜解析+看懂，至少5分钟。100道错题就是8小时</li>
+          <li>抄完你记住的是"这道题选C"，不是"这类题怎么解"</li>
+          <li>这是典型的"用体力代替思考"，看起来很努力，实际效率极低</li>
+        </ul>
+      </div>
+      <div class="diag-card diag-good">
+        <div class="diag-title" style="color:var(--accent3)">正确做法：错题本只记"方法笔记"，不抄原题</div>
+        <div class="action-box" style="margin-top:8px">
+          <div class="action-title">具体操作步骤</div>
+          <ol>
+            <li>在纸质书上直接用红笔标记错题题号，不要抄出来</li>
+            <li>看完解析后，在错题本上只写一行：<strong>"XX题型 + 解题方法"</strong><br>
+              例如："增长率比较：分子大分母小则大，分子小分母大则小，交叉看趋势"<br>
+              例如："逻辑填空'南辕北辙'强调行动和目的相反，'背道而驰'强调方向相反"</li>
+            <li>同一类错题归到一起，你会发现80%的错题都是重复犯同样的错误</li>
+            <li>每隔3天把标记的错题<strong>重做一遍</strong>（不是看答案，是重新做）</li>
+            <li>连续做对2次的错题可以划掉，不再管它</li>
+          </ol>
+        </div>
+      </div>
+      <div class="info-box tip">
+        <strong>错题本的本质：</strong>不是记录"我错了什么"，而是记录"我不会什么方法"。一本好的错题本应该只有几页纸，写满了你曾经不会的解题方法和易混淆知识点。
+      </div>
+    </div>
+
+    <!-- 免费资源 -->
+    <div class="card">
+      <h2>省钱方案：不花钱也能备考</h2>
+      <p style="color:var(--text2);margin-bottom:12px">家里条件有限，以下是不花钱或花很少钱的备考方式：</p>
+      <table class="data-table">
+        <thead><tr><th>需要</th><th>免费方案</th><th>说明</th></tr></thead>
+        <tbody>
+          <tr><td>行测真题</td><td>粉笔APP / 华图在线</td><td>历年真题全部免费，带解析</td></tr>
+          <tr><td>申论真题</td><td>粉笔APP</td><td>真题+参考答案免费，可在线作答</td></tr>
+          <tr><td>政治理论讲义</td><td>B站搜"政治理论"</td><td>大量免费冲刺讲义和带背视频</td></tr>
+          <tr><td>速算技巧</td><td>B站搜"资料分析速算"</td><td>齐麟、花生十三的速算课B站有</td></tr>
+          <tr><td>申论批改</td><td>让AI帮你批改</td><td>把申论答案拍照发给我，我帮你分析</td></tr>
+          <tr><td>刷题</td><td>粉笔APP智能刷题</td><td>按考点分类，自动记录错题</td></tr>
+          <tr><td>模考</td><td>粉笔每周模考</td><td>免费，限时，有排名</td></tr>
+        </tbody>
+      </table>
+      <div class="info-box tip">
+        <strong>粉笔APP</strong>是你最核心的工具。真题、刷题、模考、申论参考答案全免费。用好这一个APP就够了，不需要买任何付费课程。
+      </div>
+    </div>
+
+    <!-- 每日执行 -->
+    <div class="card">
+      <h2>每天到底做什么：一张清单</h2>
+      <p style="color:var(--text2);margin-bottom:16px">不用想太多，每天照着这个顺序做就行，大约4-5小时</p>
+      <div style="margin-bottom:16px">
+        <div class="diag-card diag-critical">
+          <div class="diag-title">第一件事（最重要）：申论动笔写 -- 60分钟</div>
+          <ul class="diag-list">
+            <li>打开粉笔APP，找一套申论真题</li>
+            <li>只做前2道小题（归纳概括/提出对策），严格限时各25分钟</li>
+            <li>写完立刻看参考答案，逐句比对：你漏了哪些要点？你的表述和标准表述差在哪？</li>
+            <li>把参考答案里的"规范表述"抄到本子上（只抄你没想到的那些）</li>
+            <li><strong>目标：考前写完至少15套完整申论真题</strong>，这是从50到70的唯一路径</li>
+          </ul>
+        </div>
+        <div class="diag-card diag-warning">
+          <div class="diag-title">第二件事：资料分析限时练 -- 40分钟</div>
+          <ul class="diag-list">
+            <li>粉笔APP刷5道资料分析，手机计时8分钟</li>
+            <li>超时的题做完后看解析，重点看速算方法</li>
+            <li>错题在书上标记，3天后重做</li>
+          </ul>
+        </div>
+        <div class="diag-card diag-warning">
+          <div class="diag-title">第三件事：判断推理+言语理解刷题 -- 60分钟</div>
+          <ul class="diag-list">
+            <li>定义判断10题 + 类比推理10题 + 逻辑填空20题</li>
+            <li>做完对答案，错题标记+记方法笔记</li>
+          </ul>
+        </div>
+        <div class="diag-card diag-info">
+          <div class="diag-title">第四件事：政治理论背诵 -- 20分钟</div>
+          <ul class="diag-list">
+            <li>B站或粉笔找政治理论专题，每天背1个专题的核心表述</li>
+          </ul>
+        </div>
+        <div class="diag-card diag-good">
+          <div class="diag-title">第五件事：数量关系做题 -- 20分钟</div>
+          <ul class="diag-list">
+            <li>只做方程题+数字特性题，每天5题，必须动笔算</li>
+            <li>不要看新的课了，就做题。不会的题看解析，记方法</li>
+          </ul>
+        </div>
+      </div>
+      <div class="info-box important">
+        <strong>关键原则：</strong>从今天开始，不再看任何新课。你的问题不是"学得不够"，而是"练得不够"。每天的4-5小时全部用来做题+对答案+记方法，不要再花一分钟看视频课。
+      </div>
+    </div>
+
+    <!-- 一句话总结 -->
+    <div class="card">
+      <h2>最后说几句</h2>
+      <div class="info-box tip" style="border-color:var(--accent2);background:rgba(129,140,248,0.1)">
+        <strong style="color:var(--accent2)">1. 目标要对：</strong>行测70+申论70+=140，这是进面线硬指标。不是"超过竞争对手"的问题，是分数线本身要求这么高。<br><br>
+        <strong style="color:var(--accent2)">2. 方法要对：</strong>错题不抄题，抄方法。申论必须动笔写。数量关系不要再换老师了。<br><br>
+        <strong style="color:var(--accent2)">3. 资源要对：</strong>粉笔APP一个就够，真题+刷题+模考全免费。不用花钱买课。<br><br>
+        <strong style="color:var(--accent2)">4. 心态要对：</strong>你考了两次，第一次47第二次56，说明你在进步。但从56到70需要的不是更多课，而是更多练习。沉下心来刷3个月题，你会看到质变。<br><br>
+        <strong style="color:var(--accent2)">5. 申论是你的救命稻草：</strong>行测和竞争对手差距不大，申论20分差距才是致命的。每天60分钟写申论，雷打不动。
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== Section: Overview ===== -->
+  <div class="section" id="sec-overview">
+    <div class="card">
+      <h2>三年试卷结构一览</h2>
+      <table class="data-table">
+        <thead>
+          <tr><th>模块</th><th>2024</th><th>2025</th><th>2026</th><th>趋势</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>政治理论</td><td>--</td><td>15题</td><td>15题</td><td><span class="tag tag-new">2025新增</span></td></tr>
+          <tr><td>常识判断</td><td>20题</td><td>15题</td><td>15题</td><td><span class="tag tag-cool">减少5题</span></td></tr>
+          <tr><td>数量关系</td><td>15题</td><td>15题</td><td>15题</td><td><span class="tag tag-cool">稳定</span></td></tr>
+          <tr><td>言语理解</td><td>25题</td><td>25题</td><td>25题</td><td><span class="tag tag-cool">稳定</span></td></tr>
+          <tr><td>判断推理</td><td>35题</td><td>35题</td><td>35题</td><td><span class="tag tag-cool">稳定</span></td></tr>
+          <tr><td>资料分析</td><td>15题</td><td>20题</td><td>20题</td><td><span class="tag tag-warm">增加5题</span></td></tr>
+          <tr style="font-weight:700"><td>合计</td><td>125题</td><td>125题</td><td>125题</td><td></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card">
+      <h2>三年题型分布对比</h2>
+      <div class="chart-container" style="max-height:380px">
+        <canvas id="chartOverview"></canvas>
+      </div>
+    </div>
+
+    <div class="info-box important">
+      <strong>关键发现：</strong>2025年起政治理论独立成模块（15题），常识判断从20题缩减为15题，资料分析从15题增至20题。2026完全延续2025结构，说明<strong>改革已定型</strong>，2027备考按此结构准备。
+    </div>
+  </div>
+
+  <!-- ===== Section: Structure ===== -->
+  <div class="section" id="sec-structure">
+    <div class="card">
+      <h2>各年模块占比</h2>
+      <div class="comparison-grid">
+        <div class="comparison-cell">
+          <div class="year">2024年</div>
+          <canvas id="donut2024" width="220" height="220"></canvas>
+          <div class="detail">常识20题 + 数量15题<br>言语25题 + 判断35题 + 资料15题</div>
+        </div>
+        <div class="comparison-cell">
+          <div class="year">2025年</div>
+          <canvas id="donut2025" width="220" height="220"></canvas>
+          <div class="detail">政治理论15题（新增）<br>常识15题 + 资料增至20题</div>
+        </div>
+        <div class="comparison-cell">
+          <div class="year">2026年</div>
+          <canvas id="donut2026" width="220" height="220"></canvas>
+          <div class="detail">结构与2025完全一致<br>延续改革后新结构</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>模块题量变化趋势</h2>
+      <div class="chart-container" style="max-height:360px">
+        <canvas id="chartTrend"></canvas>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>时间压力分析</h2>
+      <p style="color:var(--text2);margin-bottom:12px">行测考试时间：120分钟，125题，平均每题 <strong style="color:var(--accent)">57.6秒</strong></p>
+      <table class="data-table">
+        <thead><tr><th>模块</th><th>题量</th><th>建议用时</th><th>每题用时</th><th>难度</th></tr></thead>
+        <tbody>
+          <tr><td>政治理论</td><td>15</td><td>8分钟</td><td>32秒</td><td><span class="tag tag-cool">易</span></td></tr>
+          <tr><td>常识判断</td><td>15</td><td>8分钟</td><td>32秒</td><td><span class="tag tag-warm">中</span></td></tr>
+          <tr><td>言语理解</td><td>25</td><td>25分钟</td><td>60秒</td><td><span class="tag tag-warm">中</span></td></tr>
+          <tr><td>判断推理</td><td>35</td><td>35分钟</td><td>60秒</td><td><span class="tag tag-warm">中</span></td></tr>
+          <tr><td>资料分析</td><td>20</td><td>30分钟</td><td>90秒</td><td><span class="tag tag-hot">难</span></td></tr>
+          <tr><td>数量关系</td><td>15</td><td>14分钟</td><td>56秒</td><td><span class="tag tag-hot">难</span></td></tr>
+        </tbody>
+      </table>
+      <div class="info-box tip">
+        <strong>考场策略：</strong>政治理论+常识快速过（16分钟），把时间留给资料分析（30分钟）。数量关系只做有把握的5-8题，其余猜同一选项。
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== Section: Knowledge Points ===== -->
+  <div class="section" id="sec-points">
+    <div class="card">
+      <h2>三年考点出现频率</h2>
+      <p style="color:var(--text2);margin-bottom:16px">以下统计各知识点在三年试卷中的出现次数，出现越多 = 越可能继续考</p>
+      <div class="heatmap-grid">
+        <div class="heat-cell heat-3">增长率/增长量<br><strong>3年必考 / 每年3-5题</strong></div>
+        <div class="heat-cell heat-3">比重问题<br><strong>3年必考 / 每年2-4题</strong></div>
+        <div class="heat-cell heat-3">逻辑填空（实词/成语）<br><strong>3年必考 / 每年8-10题</strong></div>
+        <div class="heat-cell heat-3">片段阅读（主旨题）<br><strong>3年必考 / 每年5-8题</strong></div>
+        <div class="heat-cell heat-3">定义判断<br><strong>3年必考 / 每年10题</strong></div>
+        <div class="heat-cell heat-3">逻辑判断（翻译推理）<br><strong>3年必考 / 每年3-5题</strong></div>
+        <div class="heat-cell heat-3">习近平新时代思想<br><strong>3年必考 / 每年5-8题</strong></div>
+        <div class="heat-cell heat-2">排列组合/概率<br><strong>3年出现 / 每年2-3题</strong></div>
+        <div class="heat-cell heat-2">工程问题<br><strong>3年出现 / 每年1-2题</strong></div>
+        <div class="heat-cell heat-2">行程问题<br><strong>3年出现 / 每年1-2题</strong></div>
+        <div class="heat-cell heat-2">利润/经济问题<br><strong>3年出现 / 每年1-2题</strong></div>
+        <div class="heat-cell heat-2">图形推理（规律类）<br><strong>3年出现 / 每年3-5题</strong></div>
+        <div class="heat-cell heat-2">类比推理<br><strong>3年出现 / 每年5-10题</strong></div>
+        <div class="heat-cell heat-2">倍数/平均数<br><strong>3年出现 / 每年1-2题</strong></div>
+        <div class="heat-cell heat-2">语句排序<br><strong>3年出现 / 每年2-3题</strong></div>
+        <div class="heat-cell heat-2">加强/削弱题<br><strong>3年出现 / 每年2-3题</strong></div>
+        <div class="heat-cell heat-1">容斥问题<br><strong>2年出现</strong></div>
+        <div class="heat-cell heat-1">溶液/浓度问题<br><strong>2年出现</strong></div>
+        <div class="heat-cell heat-1">最值问题<br><strong>2年出现</strong></div>
+        <div class="heat-cell heat-1">宪法/行政法<br><strong>2年出现</strong></div>
+        <div class="heat-cell heat-1">科技常识<br><strong>2年出现</strong></div>
+        <div class="heat-cell heat-1">中国历史<br><strong>2年出现</strong></div>
+        <div class="heat-cell heat-0">几何创新题<br><strong>2024出现 / 难度高</strong></div>
+        <div class="heat-cell heat-0">数字推理<br><strong>偶发 / 不稳定</strong></div>
+      </div>
+      <p style="color:var(--text2);margin-top:12px;font-size:0.85em">
+        <span style="color:#f87171">■</span> 3年必考 = 必须掌握 &nbsp;|&nbsp;
+        <span style="color:#fb923c">■</span> 高频 = 重点学习 &nbsp;|&nbsp;
+        <span style="color:#38bdf8">■</span> 中频 = 有余力再看 &nbsp;|&nbsp;
+        <span style="color:#94a3b8">■</span> 低频 = 了解即可
+      </p>
+    </div>
+
+    <div class="card">
+      <h2>数量关系考点明细</h2>
+      <table class="data-table">
+        <thead><tr><th>考点</th><th>2024</th><th>2025</th><th>2026</th><th>难度</th><th>建议</th></tr></thead>
+        <tbody>
+          <tr><td>排列组合</td><td>1题</td><td>1题</td><td>1题</td><td><span class="tag tag-hot">难</span></td><td>掌握基础公式即可</td></tr>
+          <tr><td>概率</td><td>1题</td><td>1题</td><td>1题</td><td><span class="tag tag-warm">中</span></td><td>与排列组合结合</td></tr>
+          <tr><td>工程问题</td><td>1题</td><td>2题</td><td>1题</td><td><span class="tag tag-warm">中</span></td><td>必学，容易拿分</td></tr>
+          <tr><td>行程问题</td><td>1题</td><td>1题</td><td>1题</td><td><span class="tag tag-hot">难</span></td><td>掌握基本公式</td></tr>
+          <tr><td>利润问题</td><td>1题</td><td>1题</td><td>2题</td><td><span class="tag tag-warm">中</span></td><td>必学，套路固定</td></tr>
+          <tr><td>几何问题</td><td>3题</td><td>2题</td><td>2题</td><td><span class="tag tag-hot">难</span></td><td>2024有创新题型</td></tr>
+          <tr><td>容斥问题</td><td>1题</td><td>1题</td><td>0题</td><td><span class="tag tag-warm">中</span></td><td>公式简单，可学</td></tr>
+          <tr><td>数字特性</td><td>1题</td><td>1题</td><td>1题</td><td><span class="tag tag-cool">易</span></td><td>必学，秒杀技巧</td></tr>
+          <tr><td>方程/不定方程</td><td>2题</td><td>2题</td><td>2题</td><td><span class="tag tag-cool">易</span></td><td>必学，基础方法</td></tr>
+          <tr><td>最值问题</td><td>1题</td><td>1题</td><td>1题</td><td><span class="tag tag-warm">中</span></td><td>有余力再学</td></tr>
+          <tr><td>溶液浓度</td><td>1题</td><td>0题</td><td>1题</td><td><span class="tag tag-warm">中</span></td><td>了解即可</td></tr>
+          <tr><td>年龄/日期问题</td><td>1题</td><td>1题</td><td>1题</td><td><span class="tag tag-cool">易</span></td><td>套路题，可秒杀</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card">
+      <h2>资料分析考点明细</h2>
+      <table class="data-table">
+        <thead><tr><th>考点</th><th>2024</th><th>2025</th><th>2026</th><th>难度</th></tr></thead>
+        <tbody>
+          <tr><td>增长率计算</td><td>3题</td><td>4题</td><td>3题</td><td><span class="tag tag-warm">中</span></td></tr>
+          <tr><td>增长量计算</td><td>2题</td><td>2题</td><td>3题</td><td><span class="tag tag-warm">中</span></td></tr>
+          <tr><td>比重计算/变化</td><td>3题</td><td>3题</td><td>3题</td><td><span class="tag tag-warm">中</span></td></tr>
+          <tr><td>倍数问题</td><td>2题</td><td>2题</td><td>2题</td><td><span class="tag tag-cool">易</span></td></tr>
+          <tr><td>平均数问题</td><td>1题</td><td>2题</td><td>2题</td><td><span class="tag tag-cool">易</span></td></tr>
+          <tr><td>综合分析判断</td><td>4题</td><td>5题</td><td>5题</td><td><span class="tag tag-hot">难</span></td></tr>
+          <tr><td>读表/读图题</td><td>0题</td><td>2题</td><td>2题</td><td><span class="tag tag-cool">易</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ===== Section: Basics ===== -->
+  <div class="section" id="sec-basics">
+
+    <div class="card">
+      <h2>什么是"立足于基础"</h2>
+      <p style="color:var(--text2);line-height:1.8">
+        数学家葛军一直强调"立足于基础"。很多人以为基础就是"背公式"，其实不是。<strong style="color:var(--text)">基础 = 理解公式背后的等量关系</strong>。
+      </p>
+      <p style="color:var(--text2);line-height:1.8;margin-top:10px">
+        你目前的状态：改改数字会做，换个场景就不会。这说明你记住了"解题模板"，但不理解"为什么要这样列式"。
+        下面每个题型，我都从"一句话说清本质"开始，帮你建立真正的理解。
+      </p>
+    </div>
+
+    <!-- ========== 工程问题 ========== -->
+    <div class="concept-card">
+      <h2>一、工程问题</h2>
+      <div class="concept-subtitle">行测数量关系每年必考1-2题，属于中等难度，学会了稳拿分</div>
+
+      <div class="core-idea">
+        <div class="label">核心思想（整个工程问题只靠这一句话）</div>
+        <div class="formula">总量 = 效率 x 时间</div>
+        <div class="plain">不管题目怎么变，都是在问"谁、以多快的速度、干了多久、干了多少"</div>
+      </div>
+
+      <h3>为什么是这个公式</h3>
+      <div class="think-step">
+        <div class="think-num">1</div>
+        <div class="think-content">
+          <strong>大白话说：</strong>你搬100块砖，每小时搬10块，要搬10小时。100 = 10 x 10。就这么简单。
+        </div>
+      </div>
+      <div class="think-step">
+        <div class="think-num">2</div>
+        <div class="think-content">
+          <strong>公式变形：</strong>知道总量和效率，可以算时间（时间 = 总量 / 效率）。知道总量和时间，可以算效率（效率 = 总量 / 时间）。三个量，知道任意两个，第三个就能算。
+        </div>
+      </div>
+      <div class="think-step">
+        <div class="think-num">3</div>
+        <div class="think-content">
+          <strong>多人合作：</strong>甲的效率 + 乙的效率 = 两人合作的效率。为什么能直接加？因为效率就是"单位时间的工作量"，两个人同时干，单位时间干的量就是各自干的量之和。
+        </div>
+      </div>
+
+      <div class="example-box">
+        <div class="ex-title">基础例题</div>
+        <div class="ex-q">
+          一项工程，甲单独做需要12天，乙单独做需要18天。两人合作几天完成？
+        </div>
+        <div class="answer-reveal">
+          <button class="answer-btn" onclick="this.nextElementSibling.classList.toggle('show')">点击看思考过程</button>
+          <div class="answer-body">
+            <div class="think-step">
+              <div class="think-num">1</div>
+              <div class="think-content"><strong>问自己：这道题在问什么？</strong><br>
+                问的是"合作几天完成"，即求时间。已知两个人各自的效率（通过"单独做几天"间接给出），求合作时间。
+              </div>
+            </div>
+            <div class="think-step">
+              <div class="think-num">2</div>
+              <div class="think-content"><strong>怎么处理"甲单独做12天"？</strong><br>
+                "单独做12天"= 效率是总量的1/12。为什么？因为总量 / 12天 = 每天做的量 = 效率。<br>
+                同理，乙的效率 = 1/18。
+              </div>
+            </div>
+            <div class="think-step">
+              <div class="think-num">3</div>
+              <div class="think-content"><strong>合作效率 = 1/12 + 1/18 = 5/36</strong><br>
+                合作时间 = 总量(1) / 合作效率(5/36) = 36/5 = <strong>7.2天</strong>
+              </div>
+            </div>
+            <div class="think-step">
+              <div class="think-num">4</div>
+              <div class="think-content"><strong>回头看：我做了什么？</strong><br>
+                从头到尾只用了一个公式：总量 = 效率 x 时间。"单独做几天"倒推出效率，合作效率相加，再除总量得时间。
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <h3>变种：同一个思想，换了件衣服</h3>
+      <div class="variation">
+        <div class="var-title">变种1：注水/排水问题</div>
+        <div class="var-body">
+          一个水池，进水管每小时注水3吨，排水管每小时排水1吨。水池容量12吨，多久注满？<br>
+          <strong>本质没变：</strong>净效率 = 3 - 1 = 2吨/小时，时间 = 12 / 2 = 6小时。<br>
+          只是"效率"从"工作效率"变成了"净注水速度"，公式还是总量 = 效率 x 时间。
+        </div>
+      </div>
+      <div class="variation">
+        <div class="var-title">变种2：分段合作问题</div>
+        <div class="var-body">
+          甲先单独做3天，然后甲乙合作，还需几天完成？<br>
+          <strong>本质没变：</strong>先算甲3天做了多少（3 x 甲的效率），剩余量 = 总量 - 已做量，然后用合作效率算剩余时间。<br>
+          只是把"一步算完"拆成了"两步"，公式还是同一个。
+        </div>
+      </div>
+      <div class="variation">
+        <div class="var-title">变种3：效率变化问题</div>
+        <div class="var-body">
+          甲前5天效率为2，之后效率降低为1，总量30，共需几天？<br>
+          <strong>本质没变：</strong>前5天做了 5 x 2 = 10，剩余 30 - 10 = 20，以效率1做还需 20天，共 25天。<br>
+          分段处理，每段都用同一个公式。
+        </div>
+      </div>
+
+      <div class="pitfall">
+        <div class="pit-title">常见坑</div>
+        <div class="pit-body">
+          <strong>坑1：</strong>"甲单独做12天"不是说甲做了12天，是说甲的效率 = 1/12。别把"做完需要几天"和"实际做了几天"搞混。<br>
+          <strong>坑2：</strong>合作效率可以直接加，但"合作时间"不能直接加。别算出甲要12天、乙要18天，就以为合作要30天。<br>
+          <strong>坑3：</strong>题目问"还需几天"时，记得减去已经做的天数。
+        </div>
+      </div>
+    </div>
+
+    <div class="section-divider"></div>
+
+    <!-- ========== 排列组合 ========== -->
+    <div class="concept-card">
+      <h2>二、排列组合</h2>
+      <div class="concept-subtitle">行测每年考1-2题，难度偏高。掌握基础思想够用，不必追求难题</div>
+
+      <div class="core-idea">
+        <div class="label">核心思想（不是背公式，是理解"选"和"排"的区别）</div>
+        <div class="formula">选 = C（不管顺序） &nbsp;&nbsp; 排 = A（管顺序）</div>
+        <div class="plain">所有排列组合题，本质就是在问一个问题：<strong>"顺序重不重要？"</strong></div>
+      </div>
+
+      <h3>为什么要除以m!（理解C的来历）</h3>
+      <div class="think-step">
+        <div class="think-num">1</div>
+        <div class="think-content">
+          <strong>先理解A（排列）：</strong>从5个人里选2个人排队，有多少种排法？<br>
+            第1个位置有5种选择，第2个位置有4种选择，所以 5 x 4 = 20种。<br>
+            这就是 A(5,2) = 5 x 4 = 20。<strong>管顺序</strong>，先选谁后选谁不一样。
+        </div>
+      </div>
+      <div class="think-step">
+        <div class="think-num">2</div>
+        <div class="think-content">
+          <strong>再理解C（组合）：</strong>从5个人里选2个人组队（不排队），有多少种选法？<br>
+            A和B组队、B和A组队，是同一支队伍。所以每一对人都被A(5,2)重复计算了2次。<br>
+            真正的选法 = A(5,2) / 2! = 20 / 2 = 10种。<br>
+            <strong>除以m!就是去掉重复计算的部分</strong>。
+        </div>
+      </div>
+      <div class="think-step">
+        <div class="think-num">3</div>
+        <div class="think-content">
+          <strong>一句话总结：</strong>选人不管顺序用C，安排位置/排队用A。拿到题目先问自己"换一下顺序结果变不变"，变了用A，不变用C。
+        </div>
+      </div>
+
+      <div class="example-box">
+        <div class="ex-title">基础例题：怎么判断用A还是C</div>
+        <div class="ex-q">
+          题1：从7名志愿者中选3人分别去A、B、C三个岗位，有多少种安排方式？<br>
+          题2：从7名志愿者中选3人参加活动，有多少种选法？
+        </div>
+        <div class="answer-reveal">
+          <button class="answer-btn" onclick="this.nextElementSibling.classList.toggle('show')">点击看思考过程</button>
+          <div class="answer-body">
+            <div class="think-step">
+              <div class="think-num">1</div>
+              <div class="think-content"><strong>题1：问自己"换顺序结果变不变？"</strong><br>
+                甲去A岗、乙去B岗 和 甲去B岗、乙去A岗，是不同的安排。<strong>顺序变了结果变了，用A</strong>。<br>
+                A(7,3) = 7 x 6 x 5 = 210种
+              </div>
+            </div>
+            <div class="think-step">
+              <div class="think-num">2</div>
+              <div class="think-content"><strong>题2：问自己"换顺序结果变不变？"</strong><br>
+                选了甲乙丙 和 选了丙甲乙，是同一组人。<strong>顺序变了结果没变，用C</strong>。<br>
+                C(7,3) = A(7,3) / 3! = 210 / 6 = 35种
+              </div>
+            </div>
+            <div class="think-step">
+              <div class="think-num">3</div>
+              <div class="think-content"><strong>同一个基础：A(7,3) = 210，C(7,3) = 210 / 6 = 35。</strong><br>
+                区别只有一个：除不除m!。除不除取决于"顺序重不重要"。
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <h3>变种：换了件衣服但本质没变</h3>
+      <div class="variation">
+        <div class="var-title">变种1：分组问题</div>
+        <div class="var-body">
+          6个人平均分成2组，有多少种分法？<br>
+          <strong>思考：</strong>先从6个里选3个 C(6,3)=20，剩下3个自动成另一组。但两组没有标签（不是A组B组），所以除以2!去重复。答案 = 20/2 = 10种。<br>
+          <strong>本质：</strong>还是"选"，但多了"去重复"这一步。
+        </div>
+      </div>
+      <div class="variation">
+        <div class="var-title">变种2：至少/至多问题</div>
+        <div class="var-body">
+          从5男3女中选3人，至少1名女性，有多少种选法？<br>
+          <strong>思考方法1（正面）：</strong>1女2男 + 2女1男 + 3女0男 = C(3,1)C(5,2) + C(3,2)C(5,1) + C(3,3) = 30+15+1 = 46<br>
+          <strong>思考方法2（反面）：</strong>全部 - 0女 = C(8,3) - C(5,3) = 56 - 10 = 46<br>
+          <strong>本质：</strong>还是选（C），只是需要分类讨论或用"总数减反面"简化计算。
+        </div>
+      </div>
+      <div class="variation">
+        <div class="var-title">变种3：捆绑/插空问题</div>
+        <div class="var-body">
+          5个人排队，甲乙必须相邻，有多少种排法？<br>
+          <strong>思考：</strong>把甲乙捆绑成一个"超级人"，和其余3人共4个元素排列 A(4,4)=24，甲乙内部可以互换 2!=2，共 24 x 2 = 48种。<br>
+          <strong>本质：</strong>还是排（A），只是需要先处理限制条件。
+        </div>
+      </div>
+
+      <div class="pitfall">
+        <div class="pit-title">常见坑</div>
+        <div class="pit-body">
+          <strong>坑1：</strong>拿到题就套公式，不做"顺序重不重要"的判断。这是最常见的错误。<br>
+          <strong>坑2：</strong>分组问题忘记除以组数的阶乘（去重复）。分2组除以2!，分3组除以3!。<br>
+          <strong>坑3：</strong>"至少"问题正面分类太多时，一定要想到"总数减反面"，能省一半计算量。<br>
+          <strong>坑4：</strong>排列组合是考试中性价比最低的题型。如果30秒内看不出思路，直接猜答案跳过，把时间留给资料分析。
+        </div>
+      </div>
+    </div>
+
+    <div class="section-divider"></div>
+
+    <!-- ========== 方程与不定方程 ========== -->
+    <div class="concept-card">
+      <h2>三、方程与不定方程</h2>
+      <div class="concept-subtitle">每年必考2题，最基础的方法，必须熟练到条件反射</div>
+
+      <div class="core-idea">
+        <div class="label">核心思想</div>
+        <div class="formula">找到等量关系，设未知数，列方程</div>
+        <div class="plain">数量关系里80%的题，最终都是在列方程、解方程。区别只在于"怎么找到等量关系"</div>
+      </div>
+
+      <h3>怎么找等量关系</h3>
+      <div class="think-step">
+        <div class="think-num">1</div>
+        <div class="think-content"><strong>看题目里有没有"等于""是""共""合计"这些词。</strong><br>
+          "甲乙共花了100元" → 甲 + 乙 = 100<br>
+          "甲的年龄是乙的2倍" → 甲 = 2 x 乙<br>
+          "售价比成本高20%" → 售价 = 成本 x 1.2
+        </div>
+      </div>
+      <div class="think-step">
+        <div class="think-num">2</div>
+        <div class="think-content"><strong>不定方程：未知数比方程多，但有隐藏约束</strong><br>
+          比如"买5元和8元的文具共花了52元，每种至少买1个"，列式：5x + 8y = 52<br>
+          一个方程两个未知数，看似无解。但x和y都是正整数，这就限定了范围。<br>
+          <strong>试一试：</strong>y=1时 x=44/5(不行)，y=2时 x=36/5(不行)，y=4时 x=4(行!)<br>
+          这就是不定方程的解法：利用"整数"这个隐藏条件逐个试。
+        </div>
+      </div>
+
+      <div class="example-box">
+        <div class="ex-title">基础例题</div>
+        <div class="ex-q">
+          小王买了单价5元的笔记本和单价3元的签字笔共20支，花了76元。问笔记本买了几支？
+        </div>
+        <div class="answer-reveal">
+          <button class="answer-btn" onclick="this.nextElementSibling.classList.toggle('show')">点击看思考过程</button>
+          <div class="answer-body">
+            <div class="think-step">
+              <div class="think-num">1</div>
+              <div class="think-content"><strong>找等量关系：</strong>"共20支" → x + y = 20；"花了76元" → 5x + 3y = 76
+              </div>
+            </div>
+            <div class="think-step">
+              <div class="think-num">2</div>
+              <div class="think-content"><strong>解方程：</strong>由第1式得 y = 20 - x，代入第2式：<br>
+                5x + 3(20-x) = 76 → 5x + 60 - 3x = 76 → 2x = 16 → x = <strong>8支</strong>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="variation">
+        <div class="var-title">变种：鸡兔同笼</div>
+        <div class="var-body">
+          鸡有2只脚，兔有4只脚，共35个头、94只脚。问鸡几只？<br>
+          <strong>本质还是方程：</strong>鸡 + 兔 = 35，2x鸡 + 4x兔 = 94。和上面的笔记本签字笔完全一样。<br>
+          鸡兔同笼听起来吓人，本质就是二元一次方程组。
+        </div>
+      </div>
+
+      <div class="pitfall">
+        <div class="pit-title">常见坑</div>
+        <div class="pit-body">
+          <strong>坑：</strong>不定方程不要硬解，用"整除特性"可以秒杀。比如 5x + 8y = 52，52和8y都是偶数，所以5x必须是偶数，x必须是偶数。直接排除一半选项。
+        </div>
+      </div>
+    </div>
+
+    <div class="section-divider"></div>
+
+    <!-- ========== 数字特性 ========== -->
+    <div class="concept-card">
+      <h2>四、数字特性（秒杀技巧）</h2>
+      <div class="concept-subtitle">每年考1题，学会后可以在30秒内秒杀，性价比极高</div>
+
+      <div class="core-idea">
+        <div class="label">核心思想</div>
+        <div class="formula">不计算，看数字本身的特征就能排除选项</div>
+        <div class="plain">选项是具体数字，但答案必须满足某些整除、奇偶、大小关系，不满足的选项直接排除</div>
+      </div>
+
+      <h3>三种最常用的特性</h3>
+      <div class="think-step">
+        <div class="think-num">1</div>
+        <div class="think-content"><strong>奇偶性：</strong>偶数 + 偶数 = 偶数，奇数 + 偶数 = 奇数。<br>
+          如果题目说"甲乙年龄之和是偶数"，而选项里有奇数，直接排除。
+        </div>
+      </div>
+      <div class="think-step">
+        <div class="think-num">2</div>
+        <div class="think-content"><strong>整除性：</strong>如果"甲的钱是乙的3倍"，那甲的金额一定能被3整除。<br>
+          选项里不能被3整除的，直接排除。
+        </div>
+      </div>
+      <div class="think-step">
+        <div class="think-num">3</div>
+        <div class="think-content"><strong>尾数法：</strong>只算个位数。比如 37 x 23，个位 = 7 x 3 = 21，尾数是1。<br>
+          四个选项尾数不同的话，只算尾数就够了。
+        </div>
+      </div>
+
+      <div class="example-box">
+        <div class="ex-title">秒杀例题</div>
+        <div class="ex-q">
+          某班学生人数在40-50之间，男生人数是女生的1.5倍。问全班有多少人？<br>
+          A.42 &nbsp; B.44 &nbsp; C.45 &nbsp; D.48
+        </div>
+        <div class="answer-reveal">
+          <button class="answer-btn" onclick="this.nextElementSibling.classList.toggle('show')">点击看秒杀过程</button>
+          <div class="answer-body">
+            <div class="think-step">
+              <div class="think-num">1</div>
+              <div class="think-content"><strong>男生 = 1.5 x 女生 = 3/2 x 女生</strong><br>
+                所以总人数 = 男生 + 女生 = 3/2 x 女生 + 女生 = 5/2 x 女生<br>
+                总人数必须是5的倍数（因为女生人数 x 5/2 = 总人数，女生人数必须是偶数使结果为整数）。
+              </div>
+            </div>
+            <div class="think-step">
+              <div class="think-num">2</div>
+              <div class="think-content"><strong>40-50之间5的倍数只有45。</strong><br>
+                不用列方程，不用计算，直接选 <strong>C.45</strong>。
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="pitfall">
+        <div class="pit-title">常见坑</div>
+        <div class="pit-body">
+          数字特性只能用来排除选项，不能直接得到答案（除非排除到只剩一个）。所以先用特性排除，剩下的再算。
+        </div>
+      </div>
+    </div>
+
+    <div class="section-divider"></div>
+
+    <!-- ========== 利润问题 ========== -->
+    <div class="concept-card">
+      <h2>五、利润问题</h2>
+      <div class="concept-subtitle">每年必考1-2题，套路固定，理解公式后非常好拿分</div>
+
+      <div class="core-idea">
+        <div class="label">核心思想</div>
+        <div class="formula">利润 = 售价 - 成本 &nbsp;&nbsp; 利润率 = 利润 / 成本</div>
+        <div class="plain">所有利润题，不管怎么绕，都是在问"成本、售价、利润"这三个量的关系</div>
+      </div>
+
+      <h3>关键公式（理解后不用背）</h3>
+      <div class="think-step">
+        <div class="think-num">1</div>
+        <div class="think-content">
+          <strong>利润率 = 利润 / 成本</strong>（注意：除以成本，不是除以售价）<br>
+          成本100元，卖120元，利润20元，利润率 = 20/100 = 20%。
+        </div>
+      </div>
+      <div class="think-step">
+        <div class="think-num">2</div>
+        <div class="think-content">
+          <strong>打折：</strong>打8折 = 售价变成原来的80%。如果原价100，打8折后卖80。<br>
+          折扣是对"售价"打折，不是对"成本"打折。
+        </div>
+      </div>
+      <div class="think-step">
+        <div class="think-num">3</div>
+        <div class="think-content">
+          <strong>核心套路：</strong>设成本为x，根据利润率算出售价，再根据"打折/促销"调整售价，最后用"总收入 = 单价 x 数量"列式。
+        </div>
+      </div>
+
+      <div class="example-box">
+        <div class="ex-title">基础例题</div>
+        <div class="ex-q">
+          某商品成本200元，标价为成本的150%，后来打9折出售。问利润率是多少？
+        </div>
+        <div class="answer-reveal">
+          <button class="answer-btn" onclick="this.nextElementSibling.classList.toggle('show')">点击看思考过程</button>
+          <div class="answer-body">
+            <div class="think-step">
+              <div class="think-num">1</div>
+              <div class="think-content"><strong>标价 = 200 x 150% = 300元</strong>
+              </div>
+            </div>
+            <div class="think-step">
+              <div class="think-num">2</div>
+              <div class="think-content"><strong>实际售价 = 300 x 90% = 270元</strong>（打9折）
+              </div>
+            </div>
+            <div class="think-step">
+              <div class="think-num">3</div>
+              <div class="think-content"><strong>利润 = 270 - 200 = 70元</strong><br>
+                利润率 = 70 / 200 = <strong>35%</strong>
+              </div>
+            </div>
+            <div class="think-step">
+              <div class="think-num">4</div>
+              <div class="think-content"><strong>回头看：</strong>三步走：算标价 → 打折算售价 → 利润/成本。所有利润题都是这个套路。
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="pitfall">
+        <div class="pit-title">常见坑</div>
+        <div class="pit-body">
+          <strong>坑1：</strong>利润率除以的是成本，不是售价。这是最常犯的错。<br>
+          <strong>坑2：</strong>"标价"和"售价"不一样。标价是挂的价，售价是实际卖的价（打折后的）。<br>
+          <strong>坑3：</strong>"亏损20%"意思是售价 = 成本 x (1-20%)，不是售价减去20元。
+        </div>
+      </div>
+    </div>
+
+    <div class="section-divider"></div>
+
+    <!-- ========== 行程问题 ========== -->
+    <div class="concept-card">
+      <h2>六、行程问题</h2>
+      <div class="concept-subtitle">每年考1-2题，和工程问题是"双胞胎"，公式结构完全一样</div>
+
+      <div class="core-idea">
+        <div class="label">核心思想</div>
+        <div class="formula">路程 = 速度 x 时间</div>
+        <div class="plain">和工程问题的"总量 = 效率 x 时间"结构完全一样。学了工程问题，行程问题就学了一半</div>
+      </div>
+
+      <h3>对比理解</h3>
+      <table class="data-table" style="margin:12px 0">
+        <thead><tr><th></th><th>工程问题</th><th>行程问题</th></tr></thead>
+        <tbody>
+          <tr><td>核心公式</td><td>总量 = 效率 x 时间</td><td>路程 = 速度 x 时间</td></tr>
+          <tr><td>合作</td><td>效率相加</td><td>相向而行时速度相加</td></tr>
+          <tr><td>同向</td><td>--</td><td>速度相减（追及）</td></tr>
+        </tbody>
+      </table>
+
+      <h3>两种经典模型</h3>
+      <div class="think-step">
+        <div class="think-num">1</div>
+        <div class="think-content"><strong>相遇问题：</strong>甲乙从两地相向而行。<br>
+          路程之和 = 总距离。公式：(V甲 + V乙) x 时间 = 总距离。<br>
+          本质：两个人同时走，每小时"靠近"的距离 = 两人速度之和。
+        </div>
+      </div>
+      <div class="think-step">
+        <div class="think-num">2</div>
+        <div class="think-content"><strong>追及问题：</strong>甲从后面追乙。<br>
+          路程之差 = 初始距离。公式：(V甲 - V乙) x 时间 = 初始距离。<br>
+          本质：每小时"缩短"的距离 = 两人速度之差。
+        </div>
+      </div>
+
+      <div class="pitfall">
+        <div class="pit-title">常见坑</div>
+        <div class="pit-body">
+          <strong>坑1：</strong>单位不统一。题目给"千米/小时"，但时间给的是分钟，记得换算。<br>
+          <strong>坑2：</strong>相遇问题用速度之和，追及问题用速度之差。搞反了就全错。
+        </div>
+      </div>
+    </div>
+
+    <div class="section-divider"></div>
+
+    <!-- ========== 容斥问题 ========== -->
+    <div class="concept-card">
+      <h2>七、容斥问题</h2>
+      <div class="concept-subtitle">2年考过，公式简单，画个图就清楚了</div>
+
+      <div class="core-idea">
+        <div class="label">核心思想</div>
+        <div class="formula">A或B = A + B - A且B</div>
+        <div class="plain">两个集合加在一起时，重叠部分被算了两次，所以要减掉一次</div>
+      </div>
+
+      <div class="example-box">
+        <div class="ex-title">基础例题</div>
+        <div class="ex-q">
+          班里40人，选了数学的有25人，选了英语的有20人，两门都选的有10人。问两门都没选的有几人？
+        </div>
+        <div class="answer-reveal">
+          <button class="answer-btn" onclick="this.nextElementSibling.classList.toggle('show')">点击看思考过程</button>
+          <div class="answer-body">
+            <div class="think-step">
+              <div class="think-num">1</div>
+              <div class="think-content"><strong>至少选一门的人数 = 25 + 20 - 10 = 35</strong><br>
+                为什么要减10？因为两门都选的人在"25"和"20"里各被算了一次，总共被算了2次，要减掉1次。
+              </div>
+            </div>
+            <div class="think-step">
+              <div class="think-num">2</div>
+              <div class="think-content"><strong>两门都没选 = 总人数 - 至少选一门 = 40 - 35 = 5人</strong>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="pitfall">
+        <div class="pit-title">常见坑</div>
+        <div class="pit-body">
+          三个集合的容斥公式：A或B或C = A+B+C - A且B - A且C - B且C + A且B且C。记不住公式就画韦恩图。
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ===== Section: Modules ===== -->
+  <div class="section" id="sec-modules">
+    <div class="card">
+      <div class="module-header">
+        <div class="module-icon" style="background:rgba(129,140,248,0.2)">政</div>
+        <div>
+          <div class="module-title">政治理论（15题）</div>
+          <div class="module-desc">2025年新增独立模块 / 背了就有分 / 投入产出比极高</div>
+        </div>
+      </div>
+      <h3>考试范围</h3>
+      <ul style="padding-left:20px;color:var(--text2)">
+        <li>习近平新时代中国特色社会主义思想核心要义</li>
+        <li>党的二十大/二十届三中全会报告关键表述</li>
+        <li>中国式现代化、新质生产力、共同富裕、高质量发展</li>
+        <li>近一年重大政策文件和讲话精神</li>
+      </ul>
+      <h3>备考建议</h3>
+      <div class="info-box tip">
+        <strong>目标正确率：10-12/15</strong><br>
+        用粉笔/华图的政治理论专题讲义，每天背30分钟。不需要"理解"，需要"记住标准表述"。
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="module-header">
+        <div class="module-icon" style="background:rgba(251,146,60,0.2);color:var(--accent4)">常</div>
+        <div>
+          <div class="module-title">常识判断（15题）</div>
+          <div class="module-desc">范围极广 / 投入产出比最低 / 不建议专门复习</div>
+        </div>
+      </div>
+      <h3>备考建议</h3>
+      <div class="info-box warn">
+        <strong>目标：随缘，对7-8个即可</strong><br>
+        常识题覆盖面太广，专门复习性价比极低。考前看一遍粉笔常识预测即可。
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="module-header">
+        <div class="module-icon" style="background:rgba(244,114,182,0.2);color:var(--accent5)">数</div>
+        <div>
+          <div class="module-title">数量关系（15题）</div>
+          <div class="module-desc">难度最高 / 看了课但不会做题 / 需要大量练习</div>
+        </div>
+      </div>
+      <h3>优先学习的考点</h3>
+      <table class="data-table">
+        <thead><tr><th>考点</th><th>预期题数</th><th>学习时间</th><th>难度</th></tr></thead>
+        <tbody>
+          <tr><td>方程/不定方程</td><td>2题</td><td>3天</td><td>★</td></tr>
+          <tr><td>数字特性（奇偶/倍数）</td><td>1题</td><td>2天</td><td>★</td></tr>
+          <tr><td>工程问题</td><td>1-2题</td><td>3天</td><td>★★</td></tr>
+          <tr><td>利润问题</td><td>1-2题</td><td>3天</td><td>★★</td></tr>
+          <tr><td>排列组合（基础）</td><td>1题</td><td>3天</td><td>★★★</td></tr>
+          <tr><td>概率（基础）</td><td>1题</td><td>2天</td><td>★★</td></tr>
+        </tbody>
+      </table>
+      <div class="info-box tip">
+        <strong>考场策略：</strong>先花3-4分钟做有把握的5-6题，剩余9-10题全部猜B或C。总计目标：对7-8题。
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="module-header">
+        <div class="module-icon" style="background:rgba(56,189,248,0.2);color:var(--accent)">言</div>
+        <div>
+          <div class="module-title">言语理解与表达（25题）</div>
+          <div class="module-desc">有基础 / 刷题可稳定提升 / 逻辑填空是关键</div>
+        </div>
+      </div>
+      <h3>题型分布</h3>
+      <table class="data-table">
+        <thead><tr><th>题型</th><th>题数</th><th>方法</th></tr></thead>
+        <tbody>
+          <tr><td>逻辑填空</td><td>8-10题</td><td>积累高频成语+语境分析</td></tr>
+          <tr><td>片段阅读（主旨意图）</td><td>5-8题</td><td>找转折词、总结句</td></tr>
+          <tr><td>细节判断</td><td>3-4题</td><td>逐项对照原文</td></tr>
+          <tr><td>语句排序/衔接</td><td>2-3题</td><td>找首句+逻辑链</td></tr>
+          <tr><td>词句理解</td><td>1-2题</td><td>联系上下文</td></tr>
+        </tbody>
+      </table>
+      <div class="info-box tip">
+        <strong>提分关键：</strong>每天刷20题逻辑填空，把错题的成语辨析抄到本子上。2个月可以稳定提升5-6题。
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="module-header">
+        <div class="module-icon" style="background:rgba(52,211,153,0.2);color:var(--accent3)">判</div>
+        <div>
+          <div class="module-title">判断推理（35题）</div>
+          <div class="module-desc">单模块分值最大 / 有基础 / 定义+类比要冲90%</div>
+        </div>
+      </div>
+      <h3>题型分布</h3>
+      <table class="data-table">
+        <thead><tr><th>题型</th><th>题数</th><th>难度</th><th>方法</th></tr></thead>
+        <tbody>
+          <tr><td>图形推理</td><td>5-10题</td><td><span class="tag tag-warm">中</span></td><td>规律总结（对称/旋转/数量/位置）</td></tr>
+          <tr><td>定义判断</td><td>10题</td><td><span class="tag tag-cool">易</span></td><td>抓住关键词，逐项对比</td></tr>
+          <tr><td>类比推理</td><td>5-10题</td><td><span class="tag tag-cool">易</span></td><td>造句法+二级辨析</td></tr>
+          <tr><td>逻辑判断</td><td>10题</td><td><span class="tag tag-hot">难</span></td><td>翻译推理+加强削弱模型</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card">
+      <div class="module-header">
+        <div class="module-icon" style="background:rgba(239,68,68,0.2);color:var(--danger)">资</div>
+        <div>
+          <div class="module-title">资料分析（20题）-- 最优先提分</div>
+          <div class="module-desc">2025起增至20题 / 公式知道但速算不行 / 练出来就能拿分</div>
+        </div>
+      </div>
+      <h3>必须掌握的公式</h3>
+      <table class="data-table">
+        <thead><tr><th>公式</th><th>用途</th><th>出现频率</th></tr></thead>
+        <tbody>
+          <tr><td>增长率 = (现期-基期)/基期</td><td>增长类题目</td><td><span class="tag tag-hot">每年3-5题</span></td></tr>
+          <tr><td>增长量 = 现期 x r/(1+r)</td><td>增长量计算</td><td><span class="tag tag-hot">每年2-3题</span></td></tr>
+          <tr><td>比重 = 部分/整体</td><td>比重类题目</td><td><span class="tag tag-hot">每年2-4题</span></td></tr>
+          <tr><td>比重变化 = 部分比重-整体比重</td><td>比重升降判断</td><td><span class="tag tag-warm">每年1-2题</span></td></tr>
+          <tr><td>倍数 = A是B的几倍</td><td>倍数问题</td><td><span class="tag tag-warm">每年1-2题</span></td></tr>
+          <tr><td>平均数 = 总量/份数</td><td>平均数问题</td><td><span class="tag tag-warm">每年1-2题</span></td></tr>
+        </tbody>
+      </table>
+      <h3>速算技巧</h3>
+      <ul style="padding-left:20px;color:var(--text2)">
+        <li><strong>截位直除</strong>：分子分母同时保留前2-3位有效数字</li>
+        <li><strong>特征数字法</strong>：把百分数转化为好算的分数（如12.5%转化1/8）</li>
+        <li><strong>错位加减法</strong>：用于乘法估算</li>
+        <li><strong>比较大小</strong>：看增长率趋势，不需要精确计算</li>
+      </ul>
+      <div class="info-box important">
+        <strong>这是提分空间最大的行测模块。</strong>资料分析不靠"感觉"靠"练"。每天1组（5题）限时8分钟，2个月正确率可从50%到85%。行测直接多拿6-8分。
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== Section: Targeted Plan ===== -->
+  <div class="section" id="sec-plan">
+    <div class="card">
+      <h2>针对性备考方案（7-9月）</h2>
+      <p style="color:var(--text2);margin-bottom:16px">
+        基于你的实际情况：有基础、看过课、但练习量严重不足。核心原则：<strong style="color:var(--text)">不再看新课，以刷题和动笔写为主</strong>。
+      </p>
+
+      <div class="info-box important">
+        <strong>核心原则：不再看新课，全部时间用来做题。</strong><br>
+        申论动笔写 60min > 资料分析限时练 40min > 判断推理+言语刷题 60min > 政治理论背诵 20min > 数量关系做题 20min<br>
+        <span style="color:var(--text2);font-size:0.9em">（申论略多于行测，因为从50到70比从56到70空间更大、确定性更高）</span>
+      </div>
+
+      <div class="timeline">
+        <div class="timeline-item">
+          <div class="period">7月 / 基础补练期 -- 把看过的课变成做题能力</div>
+          <ul>
+            <li><strong>申论</strong>（每天60分钟）：每周写2套真题的前2道小题（归纳概括+提出对策），严格限时，写完对参考答案逐句比对</li>
+            <li><strong>资料分析</strong>（每天40分钟）：前3天专练截位直除速算，之后每天1组5题限时8分钟</li>
+            <li><strong>判断推理</strong>（每天40分钟）：只刷定义判断+类比推理，目标正确率90%</li>
+            <li><strong>言语理解</strong>（每天30分钟）：每天20题逻辑填空，错题成语抄到本子上</li>
+            <li><strong>政治理论</strong>（每天20分钟）：换粉笔政治理论讲义，每天背1个专题</li>
+            <li><strong>数量关系</strong>（每天20分钟）：只做方程/不定方程+数字特性，每天5题必须动笔算</li>
+          </ul>
+        </div>
+        <div class="timeline-item">
+          <div class="period">8月 / 强化突破期 -- 申论开始写大作文</div>
+          <ul>
+            <li><strong>申论</strong>（每天60分钟）：每周1套完整申论真题（4道小题+1篇大作文），大作文先列提纲再写</li>
+            <li><strong>资料分析</strong>（每天40分钟）：限时训练加量，每天2组（10题），综合分析题专项</li>
+            <li><strong>判断推理</strong>（每天40分钟）：加入逻辑判断（加强削弱）+ 图形推理</li>
+            <li><strong>言语理解</strong>（每天30分钟）：加入片段阅读主旨题</li>
+            <li><strong>数量关系</strong>（每天20分钟）：加入工程问题+利润问题</li>
+            <li><strong>政治理论</strong>（每天20分钟）：继续背诵，开始做模拟题检验</li>
+          </ul>
+        </div>
+        <div class="timeline-item">
+          <div class="period">9月 / 套卷模拟期 -- 找考试感觉</div>
+          <ul>
+            <li>每周做2套行测真题（严格限时120分钟）+ 1套申论真题（限时150分钟）</li>
+            <li>做完立刻对答案，建立错题本</li>
+            <li>行测错得多的模块每天多练30分钟</li>
+            <li>申论重点练"综合分析"和"大作文审题立意"</li>
+            <li>政治理论冲刺背诵，数量关系错题重做</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>每日学习时间分配</h2>
+      <div class="chart-container" style="max-height:300px">
+        <canvas id="chartDaily"></canvas>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>里程碑指标</h2>
+      <table class="data-table">
+        <thead><tr><th>时间</th><th>指标</th><th>说明</th></tr></thead>
+        <tbody>
+          <tr><td>7月中</td><td>申论：完成4套小题练习</td><td>归纳概括要点命中率明显提升</td></tr>
+          <tr><td>7月底</td><td>资料分析正确率 >= 70%</td><td>速算基本过关</td></tr>
+          <tr><td>7月底</td><td>判断推理正确率 >= 70%</td><td>定义+类比稳定80%+</td></tr>
+          <tr><td>8月中</td><td>言语理解正确率 >= 76%</td><td>逻辑填空准确率明显提升</td></tr>
+          <tr><td>8月底</td><td>申论：完成8套完整真题</td><td>大作文有固定框架，小题要点命中率70%+</td></tr>
+          <tr><td>8月底</td><td>行测模拟 >= 62分</td><td>各模块均衡提升</td></tr>
+          <tr><td>9月中</td><td>行测模拟 >= 66分</td><td>资料分析正确率85%+</td></tr>
+          <tr><td>9月底</td><td>行测模拟 >= 70分，申论模拟 >= 65分</td><td>考场状态稳定</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card">
+      <h2>行测 vs 申论投入分配</h2>
+      <div class="chart-container" style="max-height:300px">
+        <canvas id="chartBalance"></canvas>
+      </div>
+      <div class="info-box important">
+        <strong>核心判断：</strong>竞争对手大部分60多也上不了岸，说明140+是硬门槛。行测和申论都必须冲70+，没有哪科可以放弃。时间分配建议：行测45%，申论55%。
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+function showSection(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('sec-' + id).classList.add('active');
+  event.target.classList.add('active');
+  renderCharts(id);
+}
+
+const C = {
+  blue: '#38bdf8', purple: '#818cf8', green: '#34d399',
+  orange: '#fb923c', pink: '#f472b6', violet: '#a78bfa',
+  blueBg: 'rgba(56,189,248,0.2)',
+  purpleBg: 'rgba(129,140,248,0.2)',
+  greenBg: 'rgba(52,211,153,0.2)',
+  orangeBg: 'rgba(251,146,60,0.2)',
+  pinkBg: 'rgba(244,114,182,0.2)',
+  violetBg: 'rgba(167,139,250,0.2)',
+};
+const gridColor = 'rgba(71,85,105,0.5)';
+Chart.defaults.color = '#94a3b8';
+Chart.defaults.font.family = '-apple-system, "PingFang SC", "Microsoft YaHei", sans-serif';
+
+let charts = {};
+
+function renderCharts(section) {
+  if (section === 'diagnosis' && !charts.diagnosis) {
+    charts.diagCompare = new Chart(document.getElementById('chartDiagCompare'), {
+      type: 'bar',
+      data: {
+        labels: ['行测', '申论'],
+        datasets: [
+          { label: '你的成绩', data: [56, 50], backgroundColor: 'rgba(239,68,68,0.6)', borderRadius: 4 },
+          { label: '竞争对手', data: [62, 65], backgroundColor: 'rgba(251,146,60,0.6)', borderRadius: 4 },
+          { label: '你的目标', data: [70, 70], backgroundColor: 'rgba(56,189,248,0.4)', borderRadius: 4 },
+        ]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: { legend: { position: 'top' } },
+        scales: {
+          x: { grid: { color: gridColor } },
+          y: { grid: { color: gridColor }, beginAtZero: true, max: 100 }
+        }
+      }
+    });
+
+    new Chart(document.getElementById('chartTarget'), {
+      type: 'bar',
+      data: {
+        labels: ['你现在的状态\n(106分)', '竞争对手水平\n(~130分，也不够)', '你的目标\n(140+分)'],
+        datasets: [
+          { label: '行测', data: [56, 62, 70], backgroundColor: C.blue, borderRadius: 4 },
+          { label: '申论', data: [50, 65, 70], backgroundColor: C.purple, borderRadius: 4 },
+        ]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        indexAxis: 'y',
+        plugins: {
+          legend: { position: 'top' },
+          tooltip: {
+            callbacks: {
+              label: ctx => `${ctx.dataset.label}: ${ctx.raw}分`
+            }
+          }
+        },
+        scales: {
+          x: { grid: { color: gridColor }, max: 100, stacked: true, ticks: { callback: v => v + '分' } },
+          y: { grid: { color: gridColor }, stacked: true }
+        }
+      }
+    });
+    charts.diagnosis = true;
+  }
+
+  if (section === 'overview' && !charts.overview) {
+    charts.overview = new Chart(document.getElementById('chartOverview'), {
+      type: 'bar',
+      data: {
+        labels: ['政治理论', '常识判断', '数量关系', '言语理解', '判断推理', '资料分析'],
+        datasets: [
+          { label: '2024', data: [0, 20, 15, 25, 35, 15], backgroundColor: C.blue, borderRadius: 4 },
+          { label: '2025', data: [15, 15, 15, 25, 35, 20], backgroundColor: C.purple, borderRadius: 4 },
+          { label: '2026', data: [15, 15, 15, 25, 35, 20], backgroundColor: C.green, borderRadius: 4 },
+        ]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: { legend: { position: 'top' } },
+        scales: {
+          x: { grid: { color: gridColor } },
+          y: { grid: { color: gridColor }, beginAtZero: true, ticks: { stepSize: 5 } }
+        }
+      }
+    });
+  }
+
+  if (section === 'structure' && !charts.donuts) {
+    const donutOpts = { responsive: false, plugins: { legend: { position: 'bottom', labels: { font: { size: 11 } } } } };
+    const donutLabels = ['政治理论','常识判断','数量关系','言语理解','判断推理','资料分析'];
+    const donutColors = [C.violet, C.orange, C.pink, C.blue, C.green, C.purple];
+
+    new Chart(document.getElementById('donut2024'), {
+      type: 'doughnut',
+      data: { labels: donutLabels, datasets: [{ data: [0,20,15,25,35,15], backgroundColor: donutColors }] },
+      options: donutOpts
+    });
+    new Chart(document.getElementById('donut2025'), {
+      type: 'doughnut',
+      data: { labels: donutLabels, datasets: [{ data: [15,15,15,25,35,20], backgroundColor: donutColors }] },
+      options: donutOpts
+    });
+    new Chart(document.getElementById('donut2026'), {
+      type: 'doughnut',
+      data: { labels: donutLabels, datasets: [{ data: [15,15,15,25,35,20], backgroundColor: donutColors }] },
+      options: donutOpts
+    });
+
+    charts.trend = new Chart(document.getElementById('chartTrend'), {
+      type: 'line',
+      data: {
+        labels: ['2024', '2025', '2026'],
+        datasets: [
+          { label: '政治理论', data: [0,15,15], borderColor: C.violet, backgroundColor: C.violetBg, tension: 0.3, fill: true },
+          { label: '常识判断', data: [20,15,15], borderColor: C.orange, backgroundColor: C.orangeBg, tension: 0.3, fill: true },
+          { label: '数量关系', data: [15,15,15], borderColor: C.pink, tension: 0.3 },
+          { label: '言语理解', data: [25,25,25], borderColor: C.blue, tension: 0.3 },
+          { label: '判断推理', data: [35,35,35], borderColor: C.green, tension: 0.3 },
+          { label: '资料分析', data: [15,20,20], borderColor: C.purple, backgroundColor: C.purpleBg, tension: 0.3, fill: true },
+        ]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: { legend: { position: 'bottom' } },
+        scales: {
+          x: { grid: { color: gridColor } },
+          y: { grid: { color: gridColor }, beginAtZero: true }
+        }
+      }
+    });
+    charts.donuts = true;
+  }
+
+  if (section === 'plan' && !charts.plan) {
+    charts.daily = new Chart(document.getElementById('chartDaily'), {
+      type: 'doughnut',
+      data: {
+        labels: ['申论动笔写 60min', '资料分析限时练 40min', '判断推理刷题 40min', '言语理解刷题 30min', '政治理论背诵 20min', '数量关系做题 20min'],
+        datasets: [{
+          data: [60, 40, 40, 30, 20, 20],
+          backgroundColor: [C.violet, C.purple, C.green, C.blue, C.orange, C.pink],
+        }]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: {
+          legend: { position: 'right', labels: { font: { size: 12 } } },
+          tooltip: {
+            callbacks: {
+              label: ctx => {
+                const pct = Math.round(ctx.raw / 210 * 100);
+                return `${ctx.label} (${pct}%)`;
+              }
+            }
+          }
+        }
+      }
+    });
+
+    charts.balance = new Chart(document.getElementById('chartBalance'), {
+      type: 'bar',
+      data: {
+        labels: ['当前投入比例', '建议投入比例'],
+        datasets: [
+          { label: '行测', data: [80, 40], backgroundColor: C.blue, borderRadius: 4 },
+          { label: '申论', data: [20, 60], backgroundColor: C.purple, borderRadius: 4 },
+        ]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        indexAxis: 'y',
+        plugins: { legend: { position: 'top' } },
+        scales: {
+          x: { grid: { color: gridColor }, max: 100, ticks: { callback: v => v + '%' } },
+          y: { grid: { color: gridColor } }
+        }
+      }
+    });
+    charts.plan = true;
+  }
+}
+
+renderCharts('diagnosis');
+</script>
+</body>
+</html>
