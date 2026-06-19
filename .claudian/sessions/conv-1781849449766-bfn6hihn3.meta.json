@@ -4,6 +4,11 @@
   "title": "你好啊啊啊啊",
   "titleGenerationStatus": "pending",
   "createdAt": 1781849449767,
-  "updatedAt": 1781849449773,
-  "sessionId": null
+  "updatedAt": 1781849513418,
+  "lastResponseAt": 1781849513418,
+  "sessionId": "a0348872-2332-4777-8982-9db40b394860",
+  "providerState": {
+    "providerSessionId": "a0348872-2332-4777-8982-9db40b394860"
+  },
+  "currentNote": "数量关系草稿纸模板.md"
 }
