@@ -4,8 +4,8 @@
   "title": "问候并询问感受",
   "titleGenerationStatus": "success",
   "createdAt": 1781837383299,
-  "updatedAt": 1781845573521,
-  "lastResponseAt": 1781845573521,
+  "updatedAt": 1781846004802,
+  "lastResponseAt": 1781846004802,
   "sessionId": "a0488422-257a-4c83-ad2f-20fb40c510da",
   "providerState": {
     "providerSessionId": "a0488422-257a-4c83-ad2f-20fb40c510da"
@@ -13,12 +13,11 @@
   "currentNote": "学习记录/记录/2026-06-19-每日.md",
   "usage": {
     "model": "haiku",
-    "inputTokens": 35232,
+    "inputTokens": 48357,
     "cacheCreationInputTokens": 0,
-    "cacheReadInputTokens": 53568,
+    "cacheReadInputTokens": 63168,
     "contextWindow": 200000,
-    "contextTokens": 88800,
-    "percentage": 44,
-    "contextWindowIsAuthoritative": true
+    "contextTokens": 111525,
+    "percentage": 56
   }
 }
