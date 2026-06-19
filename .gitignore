@@ -5,7 +5,12 @@
 .obsidian/workspace.json
 .obsidian/workspace-mobile.json
 .obsidian/cache
-.obsidian/plugins/*/data.json
+
+# 插件本体（第三方代码，不纳入笔记库；data.json 设置见上）
+# 注意：data.json 含个人配置，单独排除
+.obsidian/plugins/*/main.js
+.obsidian/plugins/*/styles.css
+.obsidian/plugins/*/*.zip
 
 # 临时
 *.tmp
